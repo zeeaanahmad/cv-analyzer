@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CV Analyzer</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 700px; margin: 60px auto; padding: 0 20px; color: #222; }
+    h1 { font-size: 1.8rem; margin-bottom: 8px; }
+    p.sub { color: #666; margin-bottom: 32px; }
+    label { font-weight: 500; display: block; margin-bottom: 6px; }
+    input[type="file"], textarea {
+      width: 100%; padding: 10px; border: 1.5px solid #ddd;
+      border-radius: 8px; font-size: 1rem; box-sizing: border-box;
+    }
+    textarea { height: 180px; resize: vertical; }
+    .field { margin-bottom: 24px; }
+    button {
+      background: #5B4FD3; color: white; border: none;
+      padding: 12px 28px; border-radius: 8px; font-size: 1rem;
+      cursor: pointer; width: 100%;
+    }
+    button:hover { background: #4a3fc0; }
+  </style>
+</head>
+<body>
+  <h1>CV Analyzer</h1>
+  <p class="sub">Upload your CV and paste a job description — get an instant match score and actionable feedback.</p>
+  <form action="/analyze" method="POST" enctype="multipart/form-data">
+    <div class="field">
+      <label for="cv_file">Your CV (PDF)</label>
+      <input type="file" id="cv_file" name="cv_file" accept=".pdf" required>
+    </div>
+    <div class="field">
+      <label for="job_description">Job description</label>
+      <textarea id="job_description" name="job_description" placeholder="Paste the full job posting here..." required></textarea>
+    </div>
+    <button type="submit">Analyze my CV →</button>
+  </form>
+</body>
+</html>
