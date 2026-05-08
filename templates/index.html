@@ -5,28 +5,98 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CV Analyzer</title>
   <style>
-    body { font-family: system-ui, sans-serif; max-width: 700px; margin: 60px auto; padding: 0 20px; color: #222; }
+    body {
+      font-family: system-ui, sans-serif;
+      max-width: 700px;
+      margin: 60px auto;
+      padding: 0 20px;
+      color: #222;
+    }
     h1 { font-size: 1.8rem; margin-bottom: 8px; }
     p.sub { color: #666; margin-bottom: 32px; }
     label { font-weight: 500; display: block; margin-bottom: 6px; }
     input[type="file"], textarea {
-      width: 100%; padding: 10px; border: 1.5px solid #ddd;
-      border-radius: 8px; font-size: 1rem; box-sizing: border-box;
+      width: 100%;
+      padding: 10px;
+      border: 1.5px solid #ddd;
+      border-radius: 8px;
+      font-size: 1rem;
+      box-sizing: border-box;
     }
     textarea { height: 180px; resize: vertical; }
     .field { margin-bottom: 24px; }
+
     button {
-      background: #5B4FD3; color: white; border: none;
-      padding: 12px 28px; border-radius: 8px; font-size: 1rem;
-      cursor: pointer; width: 100%;
+      background: #5B4FD3;
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      width: 100%;
+      transition: background 0.2s;
     }
     button:hover { background: #4a3fc0; }
+    button:disabled {
+      background: #a09ad4;
+      cursor: not-allowed;
+    }
+
+    /* Overlay */
+    #loader-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.85);
+      z-index: 999;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+    }
+    #loader-overlay.active {
+      display: flex;
+    }
+
+    /* Spinner */
+    .spinner {
+      width: 52px;
+      height: 52px;
+      border: 5px solid #e0dff8;
+      border-top-color: #5B4FD3;
+      border-radius: 50%;
+      animation: spin 0.85s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .loader-text {
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #5B4FD3;
+    }
+    .loader-sub {
+      font-size: 0.9rem;
+      color: #888;
+      margin-top: -12px;
+    }
   </style>
 </head>
 <body>
+
+  <!-- Loader overlay -->
+  <div id="loader-overlay">
+    <div class="spinner"></div>
+    <div class="loader-text">Analyzing your CV...</div>
+    <div class="loader-sub">This usually takes 10–20 seconds</div>
+  </div>
+
   <h1>CV Analyzer</h1>
   <p class="sub">Upload your CV and paste a job description — get an instant match score and actionable feedback.</p>
-  <form action="/analyze" method="POST" enctype="multipart/form-data">
+
+  <form id="analyze-form" action="/analyze" method="POST" enctype="multipart/form-data">
     <div class="field">
       <label for="cv_file">Your CV (PDF)</label>
       <input type="file" id="cv_file" name="cv_file" accept=".pdf" required>
@@ -35,7 +105,20 @@
       <label for="job_description">Job description</label>
       <textarea id="job_description" name="job_description" placeholder="Paste the full job posting here..." required></textarea>
     </div>
-    <button type="submit">Analyze my CV →</button>
+    <button type="submit" id="submit-btn">Analyze my CV →</button>
   </form>
+
+  <script>
+    document.getElementById('analyze-form').addEventListener('submit', function () {
+      // Show overlay
+      document.getElementById('loader-overlay').classList.add('active');
+
+      // Disable button so user can't click twice
+      const btn = document.getElementById('submit-btn');
+      btn.disabled = true;
+      btn.textContent = 'Analyzing...';
+    });
+  </script>
+
 </body>
 </html>
